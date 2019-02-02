@@ -7,43 +7,48 @@ const DINGDING_ROBOT =
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto('https://twitter.com/kingzzm/lists/js-master');
-  const tws = await page.$$eval(
-    'li.js-stream-item.stream-item.stream-item',
-    tw => {
-      console.log({ tw });
-      const header = tw.querySelector('.stream-item-header small a span');
-      return {
-        time: +header.getAttribute('data-time-ms'),
-      };
+  await page.goto('https://twitter.com/kingzzm/lists/js-master', {
+    timeout: 10 * 1000,
+  });
+  const tws = await page.$$('li.js-stream-item.stream-item.stream-item');
+  for (const tw of tws) {
+    let isRetw = false;
+    try {
+      await tw.$eval('.tweet-context.with-icn span a', e =>
+        e.getAttribute('data-user-id')
+      );
+      isRetw = true;
+    } catch (e) {
+      isRetw = false;
     }
-  );
-  console.log({ tws });
+    console.log({ isRetw });
 
-  // for (const tw of tws) {
-  //   const header = tw.$('.stream-item-header small a span');
-  //   const time = +header['data-time-ms'];
-  //   console.log({ time });
-  //   if (time < Date.now() - 24 * 60 * 60 * 1000) continue;
+    const time = await tw.$eval(
+      '.stream-item-header small a span',
+      e => +e.getAttribute('data-time-ms')
+    );
+    console.log({ time, date: new Date(time) });
+    if (!isRetw && time < Date.now() - 24 * 60 * 60 * 1000) break;
 
-  //   const retw = tw.$(
-  //     '.stream-item-footer .ProfileTweet-actionButton.js-actionButton.js-actionRetweet .ProfileTweet-actionCountForPresentation'
-  //   );
-  //   const retwCount = +retw.innerText;
-  //   console.log({ retwCount });
-  //   if (retwCount < 30) continue;
+    const retwCount = await tw.$eval(
+      '.stream-item-footer .ProfileTweet-actionButton.js-actionButton.js-actionRetweet .ProfileTweet-actionCountForPresentation',
+      e => +e.innerText
+    );
+    console.log({ retwCount });
+    if (retwCount < 30) continue;
 
-  //   const link = tw.$(
-  //     '.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable'
-  //   );
-  //   const url = `https://twitter.com${link['data-permalink-path']}`;
-  //   console.log({ url });
-  //   await axios.post(DINGDING_ROBOT, {
-  //     msgtype: 'text',
-  //     text: {
-  //       content: url,
-  //     },
-  //   });
-  // }
+    const info = await tw.$eval(
+      '.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable',
+      e => e.getAttribute('data-permalink-path')
+    );
+    console.log({ info });
+    const url = `https://twitter.com${info.link}`;
+    //   await axios.post(DINGDING_ROBOT, {
+    //     msgtype: 'text',
+    //     text: {
+    //       content: url,
+    //     },
+    //   });
+  }
   await browser.close();
 })();
