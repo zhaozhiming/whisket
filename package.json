@@ -2,13 +2,14 @@
   "name": "twitter-crawler",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "zhaozhiming <zhaozhiming@tik.com>",
+  "author": "zhaozhiming <zhaozhiming003@gmail.com>",
   "license": "MIT",
   "scripts": {
     "crawle": "node src/jsmaster.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "jsdom": "^13.2.0",
     "puppeteer": "^1.12.0"
   }
 }
