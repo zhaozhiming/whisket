@@ -4,19 +4,28 @@ const { DINGDING_ROBOT, TW_LISTS } = require('./config');
 
 const { JSDOM } = jsdom;
 
-const sendDingding = async ({ author, content, url }) => {
+const sendDingding = async (infos, list) => {
+  const text = infos
+    .map(
+      ({ content, author, url }) => `#### ${author}
+
+${content}
+
+[链接](${url})`
+    )
+    .join('\n');
   await axios.post(DINGDING_ROBOT, {
     msgtype: 'markdown',
     markdown: {
-      title: author,
-      text: `${content} [链接](${url})`,
+      title: list,
+      text,
     },
   });
 };
 
 const getUrl = (maxPos, list) => {
   const maxQuery = maxPos > 0 ? `&max_position=${maxPos}` : '';
-  return `https://twitter.com/kingzzm/lists/js-master/timeline?include_available_features=1&include_entities=1${maxQuery}&reset_error_state=false`;
+  return `https://twitter.com/kingzzm/lists/${list}/timeline?include_available_features=1&include_entities=1${maxQuery}&reset_error_state=false`;
 };
 
 const shouldStopLoop = tw => {
@@ -76,18 +85,18 @@ const getMyWant = async document => {
 
 const fetchTw = async list => {
   let max = 0;
+  let infos = [];
   while (true) {
     const resp = await axios.get(getUrl(max, list));
     const { data } = resp;
     const dom = new JSDOM(data['items_html']);
     const result = await getMyWant(dom.window.document);
-    for (const info of result.infos) {
-      await sendDingding(info);
-    }
+    infos = [...infos, ...result.infos];
     if (result.isStop) break;
 
     max = result.nextMax;
   }
+  await sendDingding(infos, list);
 };
 
 (async () => {
