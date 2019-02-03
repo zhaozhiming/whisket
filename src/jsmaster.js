@@ -20,43 +20,49 @@ const getUrl = maxPos => {
   return `https://twitter.com/kingzzm/lists/js-master/timeline?include_available_features=1&include_entities=1${maxQuery}&reset_error_state=false`;
 };
 
+const shouldStopLoop = tw => {
+  const retwElem = tw.querySelector('.tweet-context.with-icn span a');
+  const isRetw = retwElem ? true : false;
+
+  const timeElem = tw.querySelector('.stream-item-header small a span');
+  const time = +timeElem.getAttribute('data-time-ms');
+  return !isRetw && time < Date.now() - 24 * 60 * 60 * 1000;
+};
+
 const getMyWant = async document => {
-  const tws = document.querySelectorAll(
-    'li.js-stream-item.stream-item.stream-item'
+  const tws = Array.from(
+    document.querySelectorAll('li.js-stream-item.stream-item.stream-item')
   );
-  let isStop = false;
-  let nextMax = 0;
-  for (const tw of tws) {
+
+  const twids = tws.map(tw => {
     const infoElem = tw.querySelector(
       '.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable'
     );
-    nextMax = infoElem.getAttribute('data-tweet-id');
+    return infoElem.getAttribute('data-tweet-id');
+  });
+  const nextMax = twids[twids.length - 1];
+  const isStop = tws.some(tw => shouldStopLoop(tw));
 
-    const retwElem = tw.querySelector('.tweet-context.with-icn span a');
-    const isRetw = retwElem ? true : false;
-
-    const timeElem = tw.querySelector('.stream-item-header small a span');
-    const time = +timeElem.getAttribute('data-time-ms');
-    console.log({ time, date: new Date(time) });
-    if (!isRetw && time < Date.now() - 24 * 60 * 60 * 1000) {
-      isStop = true;
-      break;
-    }
-
-    const retwCountElem = tw.querySelector(
-      '.stream-item-footer .ProfileTweet-actionButton.js-actionButton.js-actionRetweet .ProfileTweet-actionCountForPresentation'
-    );
-    const retwCount = +retwCountElem.textContent;
-    if (retwCount < 30) continue;
-
-    const link = infoElem.getAttribute('data-permalink-path');
-    const url = `https://twitter.com${link}`;
-    await sendDingding(url);
-  }
+  const urls = tws
+    .filter(tw => {
+      const retwCountElem = tw.querySelector(
+        '.stream-item-footer .ProfileTweet-actionButton.js-actionButton.js-actionRetweet .ProfileTweet-actionCountForPresentation'
+      );
+      const retwCount = +retwCountElem.textContent;
+      return !shouldStopLoop(tw) && retwCount >= 30;
+    })
+    .map(tw => {
+      const infoElem = tw.querySelector(
+        '.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable'
+      );
+      const link = infoElem.getAttribute('data-permalink-path');
+      return `https://twitter.com${link}`;
+    });
 
   return {
     isStop,
     nextMax,
+    urls,
   };
 };
 
@@ -67,6 +73,10 @@ const getMyWant = async document => {
     const { data } = resp;
     const dom = new JSDOM(data['items_html']);
     const result = await getMyWant(dom.window.document);
+    console.log({ result });
+    // for (const url of result.urls) {
+    //   await sendDingding(url);
+    // }
     if (result.isStop) break;
 
     max = result.nextMax;
