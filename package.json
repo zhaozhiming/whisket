@@ -1,11 +1,10 @@
 {
-  "name": "twitter-crawler",
+  "name": "whisket",
   "version": "1.0.0",
-  "main": "index.js",
   "author": "zhaozhiming <zhaozhiming003@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "crawle": "node src/jsmaster.js"
+    "server": "node src/jsmaster.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
