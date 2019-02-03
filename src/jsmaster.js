@@ -1,10 +1,8 @@
 const axios = require('axios');
 const jsdom = require('jsdom');
+const { DINGDING_ROBOT, TW_LISTS } = require('./config');
 
 const { JSDOM } = jsdom;
-
-const DINGDING_ROBOT =
-  'https://oapi.dingtalk.com/robot/send?access_token=2f5119f69f5437297e555c58e141f5d9441935cc5574586287a985664011a7b3';
 
 const sendDingding = async ({ author, content, url }) => {
   await axios.post(DINGDING_ROBOT, {
@@ -16,7 +14,7 @@ const sendDingding = async ({ author, content, url }) => {
   });
 };
 
-const getUrl = maxPos => {
+const getUrl = (maxPos, list) => {
   const maxQuery = maxPos > 0 ? `&max_position=${maxPos}` : '';
   return `https://twitter.com/kingzzm/lists/js-master/timeline?include_available_features=1&include_entities=1${maxQuery}&reset_error_state=false`;
 };
@@ -76,10 +74,10 @@ const getMyWant = async document => {
   };
 };
 
-(async () => {
+const fetchTw = async list => {
   let max = 0;
   while (true) {
-    const resp = await axios.get(getUrl(max));
+    const resp = await axios.get(getUrl(max, list));
     const { data } = resp;
     const dom = new JSDOM(data['items_html']);
     const result = await getMyWant(dom.window.document);
@@ -89,5 +87,11 @@ const getMyWant = async document => {
     if (result.isStop) break;
 
     max = result.nextMax;
+  }
+};
+
+(async () => {
+  for (const list of TW_LISTS) {
+    await fetchTw(list);
   }
 })();
