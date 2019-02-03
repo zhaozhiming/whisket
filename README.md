@@ -1,3 +1,5 @@
 ## TODO
 
-* [] 使用Markdown来发送钉钉消息
+* [x] use markdown send dingding message
+* [] make project name not so crawler
+* [] move the project to the gcp

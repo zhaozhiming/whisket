@@ -6,11 +6,12 @@ const { JSDOM } = jsdom;
 const DINGDING_ROBOT =
   'https://oapi.dingtalk.com/robot/send?access_token=2f5119f69f5437297e555c58e141f5d9441935cc5574586287a985664011a7b3';
 
-const sendDingding = async url => {
+const sendDingding = async ({ author, content, url }) => {
   await axios.post(DINGDING_ROBOT, {
-    msgtype: 'text',
-    text: {
-      content: url,
+    msgtype: 'markdown',
+    markdown: {
+      title: author,
+      text: `${content} [链接](${url})`,
     },
   });
 };
@@ -43,7 +44,7 @@ const getMyWant = async document => {
   const nextMax = twids[twids.length - 1];
   const isStop = tws.some(tw => shouldStopLoop(tw));
 
-  const urls = tws
+  const infos = tws
     .filter(tw => {
       const retwCountElem = tw.querySelector(
         '.stream-item-footer .ProfileTweet-actionButton.js-actionButton.js-actionRetweet .ProfileTweet-actionCountForPresentation'
@@ -56,13 +57,22 @@ const getMyWant = async document => {
         '.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable'
       );
       const link = infoElem.getAttribute('data-permalink-path');
-      return `https://twitter.com${link}`;
+      const author = infoElem.getAttribute('data-name');
+
+      const contentElem = tw.querySelector('.js-tweet-text-container p');
+      const content = contentElem.textContent;
+
+      return {
+        author,
+        content,
+        url: `https://twitter.com${link}`,
+      };
     });
 
   return {
     isStop,
     nextMax,
-    urls,
+    infos,
   };
 };
 
@@ -73,10 +83,9 @@ const getMyWant = async document => {
     const { data } = resp;
     const dom = new JSDOM(data['items_html']);
     const result = await getMyWant(dom.window.document);
-    console.log({ result });
-    // for (const url of result.urls) {
-    //   await sendDingding(url);
-    // }
+    for (const info of result.infos) {
+      await sendDingding(info);
+    }
     if (result.isStop) break;
 
     max = result.nextMax;
