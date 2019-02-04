@@ -4,7 +4,7 @@
   "author": "zhaozhiming <zhaozhiming003@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "server": "node src/jsmaster.js"
+    "server": "node src/index.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
