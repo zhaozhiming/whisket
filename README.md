@@ -7,4 +7,4 @@
 - [x] use markdown send dingding message
 - [x] make project name not so crawler
 - [x] apply other lists
-- [ ] move the project to the gcp
+- [x] move the project to the gcp
