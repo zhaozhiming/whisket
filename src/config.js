@@ -1,11 +1,11 @@
 const DINGDING_ROBOT =
-  'https://oapi.dingtalk.com/robot/send?access_token=2f5119f69f5437297e555c58e141f5d9441935cc5574586287a985664011a7b3';
+  'https://oapi.dingtalk.com/robot/send?access_token=access_token';
 
 // Twitter account
-const TWITTER_ACCOUNT = 'kingzzm';
+const TWITTER_ACCOUNT = 'your account';
 
 // Your Twitter list
-const TWITTER_LISTS = ['js-master', 'mobile-dev'];
+const TWITTER_LISTS = ['foo', 'bar'];
 
 // filter rule: time
 const LAST_TIME = 24 * 60 * 60 * 1000;

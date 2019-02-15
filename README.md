@@ -51,7 +51,7 @@ export const sendMessage  = async (infos, list) => {
 When you finish these config items, you can execute the command as follow to run the program:
 
 ```sh
-# goto project root directory
+# goto the project root directory
 cd whisket
 # install libs
 yarn
@@ -68,7 +68,7 @@ Do you know a language other than English? Do you love #ReactJS? Join in the tra
 [链接](https://twitter.com/mjackson/status/1095461458270314497)
 ```
 
-## 🏃 Auto-run everyday
+## 🏓 Auto-run everyday
 
 You can use the [Crontab](https://en.wikipedia.org/wiki/Cron) to run program in a schedule time(like everyday). You can add the `cron-command` file to crontab schedule.
 
@@ -87,10 +87,3 @@ const LAST_TIME = 24 * 60 * 60 * 1000;
 // filter rule: time
 const RETWITTER_COUNT = 30;
 ```
-
-## 🏓 TODO
-
-- [x] use markdown send dingding message
-- [x] make project name not so crawler
-- [x] apply other lists
-- [x] move the project to the gcp

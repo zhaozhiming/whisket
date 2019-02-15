@@ -1,1 +1,1 @@
-0 12 * * * /home/zhaozmitsme/.nvm/versions/node/v10.0.0/bin/node /home/zhaozmitsme/whisket/src/index.js
+0 12 * * * node /your/project/path/src/index.js
