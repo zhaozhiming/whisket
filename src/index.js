@@ -1,31 +1,13 @@
 const axios = require('axios');
 const jsdom = require('jsdom');
-const { DINGDING_ROBOT, TW_LISTS } = require('./config');
+const { TWITTER_LISTS, TWITTER_ACCOUNT } = require('./config');
+const { sendMessage } = require('./sender');
 
 const { JSDOM } = jsdom;
 
-const sendDingding = async (infos, list) => {
-  const text = infos
-    .map(
-      ({ content, author, url }) => `#### ${author}
-
-${content}
-
-[链接](${url})`
-    )
-    .join('\n');
-  await axios.post(DINGDING_ROBOT, {
-    msgtype: 'markdown',
-    markdown: {
-      title: list,
-      text,
-    },
-  });
-};
-
 const getUrl = (maxPos, list) => {
   const maxQuery = maxPos > 0 ? `&max_position=${maxPos}` : '';
-  return `https://twitter.com/kingzzm/lists/${list}/timeline?include_available_features=1&include_entities=1${maxQuery}&reset_error_state=false`;
+  return `https://twitter.com/${TWITTER_ACCOUNT}/lists/${list}/timeline?include_available_features=1&include_entities=1${maxQuery}&reset_error_state=false`;
 };
 
 const shouldStopLoop = tw => {
@@ -96,11 +78,11 @@ const fetchTw = async list => {
 
     max = result.nextMax;
   }
-  await sendDingding(infos, list);
+  await sendMessage(infos, list);
 };
 
 (async () => {
-  for (const list of TW_LISTS) {
+  for (const list of TWITTER_LISTS) {
     await fetchTw(list);
   }
 })();
