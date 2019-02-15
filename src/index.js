@@ -1,6 +1,11 @@
 const axios = require('axios');
 const jsdom = require('jsdom');
-const { TWITTER_LISTS, TWITTER_ACCOUNT } = require('./config');
+const {
+  LAST_TIME,
+  RETWITTER_COUNT,
+  TWITTER_LISTS,
+  TWITTER_ACCOUNT,
+} = require('./config');
 const { sendMessage } = require('./sender');
 
 const { JSDOM } = jsdom;
@@ -16,7 +21,7 @@ const shouldStopLoop = tw => {
 
   const timeElem = tw.querySelector('.stream-item-header small a span');
   const time = +timeElem.getAttribute('data-time-ms');
-  return !isRetw && time < Date.now() - 24 * 60 * 60 * 1000;
+  return !isRetw && time < Date.now() - LAST_TIME;
 };
 
 const getMyWant = async document => {
@@ -39,7 +44,7 @@ const getMyWant = async document => {
         '.stream-item-footer .ProfileTweet-actionButton.js-actionButton.js-actionRetweet .ProfileTweet-actionCountForPresentation'
       );
       const retwCount = +retwCountElem.textContent;
-      return !shouldStopLoop(tw) && retwCount >= 30;
+      return !shouldStopLoop(tw) && retwCount >= RETWITTER_COUNT;
     })
     .map(tw => {
       const infoElem = tw.querySelector(

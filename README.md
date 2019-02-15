@@ -4,7 +4,7 @@
 
 I use Twitter for learning newest technology and news everyday, and I distinguish between different technical content by creating several Twitter lists.
 
-The question is: the Twitter messages have too much noise that making me have to use many time to read them finish.
+The question is there are too much noise in the Twitter messages hthat making me have to use many time to read them finish.
 
 I want a auto-filter program or shell script to let me gain the messages I readlly want. That is the goal of this repository.
 
@@ -23,7 +23,6 @@ const TWITTER_LISTS = ['foo', 'bar']; // replace it to your Twitter list
 
 When the Twitter messages fetch finish, it will send the filter result to the [DingDing](https://www.dingtalk.com/)(something like Slack in China) robot. You can config the DingDing robot url in `src/config.js`.
 
-
 ```js
 const DINGDING_ROBOT =
   'https://oapi.dingtalk.com/robot/send?access_token=your_access_token';
@@ -35,13 +34,13 @@ Certainly you can replace DingDing with the other chat application with robot or
 /**
  * Send message to anywhere you want
  * @param infos: Twitter filter result, data format like this:
-			[
-				{
-				  content, // Twitter content
-				  author, // Twiiter creator
-				  url,  // Twitter url
-				},
-			]
+     [
+       {
+         content, // Twitter content
+         author, // Twiiter creator
+         url,  // Twitter url
+       },
+     ]
  * @param list: Twitter list name
  */
 export const sendMessage  = async (infos, list) => {
@@ -49,9 +48,9 @@ export const sendMessage  = async (infos, list) => {
 }
 ```
 
-When you config these items finish, you can execute command as follow to run the program:
+When you finish these config items, you can execute the command as follow to run the program:
 
-```js
+```sh
 # goto project root directory
 cd whisket
 # install libs
@@ -69,11 +68,25 @@ Do you know a language other than English? Do you love #ReactJS? Join in the tra
 [链接](https://twitter.com/mjackson/status/1095461458270314497)
 ```
 
+## 🏃 Auto-run everyday
+
+You can use the [Crontab](https://en.wikipedia.org/wiki/Cron) to run program in a schedule time(like everyday). You can add the `cron-command` file to crontab schedule.
+
+
 ## 📒 Filter Rules
 
 * The retwitter count >= 30
 * The Twitter massage time <= last 24 hours
 
+You can change the rules value in `src/config.js`:
+
+```sh
+// filter rule: time
+const LAST_TIME = 24 * 60 * 60 * 1000;
+
+// filter rule: time
+const RETWITTER_COUNT = 30;
+```
 
 ## 🏓 TODO
 
