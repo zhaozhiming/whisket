@@ -4,13 +4,13 @@ const { DINGDING_ROBOT } = require('./config');
 /**
  * Send message to anywhere you want
  * @param infos: Twitter filter result, data format like this:
-			[
-				{
-				  content, // Twitter content
-				  author, // Twiiter creator
-				  url,  // Twitter url
-				},
-			]
+     [
+       {
+         content, // Twitter content
+         author, // Twiiter creator
+         url,  // Twitter url
+       },
+     ]
  * @param list: Twitter list name
  */
 const sendMessage = async (infos, list) => {
