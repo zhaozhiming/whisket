@@ -20,7 +20,7 @@ const shouldStopLoop = tw => {
   const isRetw = retwElem ? true : false;
 
   const timeElem = tw.querySelector('.stream-item-header small a span');
-  const time = +timeElem.getAttribute('data-time-ms');
+  const time = timeElem ? +timeElem.getAttribute('data-time-ms') : Date.now();
   return !isRetw && time < Date.now() - LAST_TIME;
 };
 
@@ -33,6 +33,7 @@ const getMyWant = async document => {
     const infoElem = tw.querySelector(
       '.tweet.js-stream-tweet.js-actionable-tweet.js-profile-popup-actionable'
     );
+
     return infoElem.getAttribute('data-tweet-id');
   });
   const nextMax = twids[twids.length - 1];
@@ -43,7 +44,7 @@ const getMyWant = async document => {
       const retwCountElem = tw.querySelector(
         '.stream-item-footer .ProfileTweet-actionButton.js-actionButton.js-actionRetweet .ProfileTweet-actionCountForPresentation'
       );
-      const retwCount = +retwCountElem.textContent;
+      const retwCount = +(retwCountElem || {}).textContent;
       return !shouldStopLoop(tw) && retwCount >= RETWITTER_COUNT;
     })
     .map(tw => {
@@ -74,6 +75,7 @@ const fetchTw = async list => {
   let max = 0;
   let infos = [];
   while (true) {
+    console.log({url: getUrl(max, list)});
     const resp = await axios.get(getUrl(max, list));
     const { data } = resp;
     const dom = new JSDOM(data['items_html']);
