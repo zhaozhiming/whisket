@@ -75,7 +75,6 @@ const fetchTw = async list => {
   let max = 0;
   let infos = [];
   while (true) {
-    console.log({url: getUrl(max, list)});
     const resp = await axios.get(getUrl(max, list));
     const { data } = resp;
     const dom = new JSDOM(data['items_html']);
