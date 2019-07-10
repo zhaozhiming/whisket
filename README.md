@@ -21,14 +21,14 @@ const TWITTER_ACCOUNT = 'account'; // replace it to your Twitter accout
 const TWITTER_LISTS = ['foo', 'bar']; // replace it to your Twitter list
 ```
 
-When the Twitter messages fetch finish, it will send the filter result to the [DingDing](https://www.dingtalk.com/)(something like Slack in China) robot. You can config the DingDing robot url in `src/config.js`.
+When the Twitter messages fetch finish, it will send the filter result to the chat sofeware robot, such like Slack or [DingDing](https://www.dingtalk.com/)(something like Slack in China) robot. You can config the robot url in `src/config.js`.
 
 ```js
-const DINGDING_ROBOT =
+const ROBOT_URL =
   'https://oapi.dingtalk.com/robot/send?access_token=your_access_token';
 ```
 
-Certainly you can replace DingDing with the other chat application with robot or even email, just overwrite the `src/sender.js`:
+Certainly you can replace robot with the other chat application with robot or even email, just overwrite the `src/sender.js`:
 
 ```js
 /**

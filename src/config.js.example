@@ -1,4 +1,4 @@
-const DINGDING_ROBOT =
+const ROBOT_URL =
   'https://oapi.dingtalk.com/robot/send?access_token=access_token';
 
 // Twitter account
@@ -14,7 +14,7 @@ const LAST_TIME = 24 * 60 * 60 * 1000;
 const RETWITTER_COUNT = 30;
 
 module.exports = {
-  DINGDING_ROBOT,
+  ROBOT_URL,
   TWITTER_ACCOUNT,
   TWITTER_LISTS,
   LAST_TIME,

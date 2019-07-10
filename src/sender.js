@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { DINGDING_ROBOT } = require('./config');
+const { ROBOT_URL } = require('./config');
 
 /**
  * Send message to anywhere you want
@@ -20,14 +20,13 @@ const sendMessage = async (infos, list) => {
 
 ${content}
 
-[链接](${url})`
+[link](${url})`
     )
     .join('\n');
-  await axios.post(DINGDING_ROBOT, {
+  await axios.post(ROBOT_URL, {
     msgtype: 'markdown',
     markdown: {
-      title: list,
-      text,
+      content: text,
     },
   });
 };
