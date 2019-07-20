@@ -65,7 +65,7 @@ The sended result like this:
 #### MICHAEL JACKSON
 Do you know a language other than English? Do you love #ReactJS? Join in the translation of the React website into your language! https://www.isreacttranslatedyet.com/
 
-[链接](https://twitter.com/mjackson/status/1095461458270314497)
+[Link](https://twitter.com/mjackson/status/1095461458270314497)
 ```
 
 ## 🏓 Auto-run everyday
